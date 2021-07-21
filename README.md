@@ -1,4 +1,4 @@
-### **Named Entity Recognition for extracting Open Source Hardware project metadata**
+### Named Entity Recognition for extracting Open Source Hardware project metadata
 
 - In this repository you can find an application, which introduces a main focus in Named Entity Recognition (NLP or NER).
 - The aim is to extract common entities within a text (or webpages).
@@ -8,9 +8,9 @@
 - The selected characteristics are manufacturing process, machine type, material and dimensions. 
 - As a future step, this informations can be linked to the suitable manufacturers for users to find corresponding Makerspace/Fablabs in order to manufacture their prototypes or individualized products.
 
-## **CURRENT STATUS**
+## CURRENT STATUS
 
-- Technology status of the project is [OTRL 6](https://github.com/OPEN-NEXT/LOSH/blob/master/OTRL.md#concept), which means it is a ready-to-use product and demonstrated in relevant environment.
+- Technology status of the project is [OTRL 4](https://github.com/OPEN-NEXT/LOSH/blob/master/OTRL.md#concept), which means it is in a early prototype stage
 - Documentation status of the project is [ODRL 3](https://github.com/OPEN-NEXT/LOSH/blob/master/OTRL.md#concept), which means it is an early release.
 - The next steps are
   - Completing the documentation
@@ -18,39 +18,39 @@
   - Enhancing the algorithm for a better accuracy
 - The needed skills are basic python skills and some enthasuiasm.
 
-## **THE PROBLEM**
+## THE PROBLEM
 
-- There were already a lot of algortihms for Named Entity Recognition, but not for this specific topic with manufacturing characteristics. The algortihm can still be trained with other train data or for other parameters to extract other needed information and enhance the use cases.
+There were already a lot of algortihms for Named Entity Recognition, but not for this specific topic with manufacturing characteristics. The algortihm can still be trained with other train data or for other parameters to extract other needed information and enhance the use cases.
 
-## **PRODUCT FEATURES/FUNCTIONS**
+## PRODUCT FEATURES/FUNCTIONS
 
 - The algorithm uses NER of SpaCy to train the model with Deep Learning (NN) for the characteristics mentioned. 
 - With a web application any kind of text can be given as input, and the output could be received with the classified entities.
 - The application can be used for any plain text input or Mediawiki-based websites (while this was only tested on Appropedia)
 
-## **THE TEAM**
+## THE TEAM
 
-- As a research partner of the Open!Next project, a small team from Fraunhofer IPK has created the solution so as to contribute for OSH.
+- As a research partner of the [OPEN!NEXT](https://opennext.eu/) project, a small team from [Fraunhofer IPK](https://www.ipk.fraunhofer.de/en.html) has created the solution so as to contribute for OSH.
 - OPEN!NEXT received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement no. 869984.
 - Our team has some basic Python skills.
 
-## **ABOUT THE DESIGN**
+## ABOUT THE DESIGN
 
-- We will perform the following: (how is this process with the application?)
-  - Create a train dataset from OSH project websites. (Giving example?)
-  - Label the dataset with the selected entities using Doccano labeling tool manually.
-  - Save the labels in a text file as JSONL.
-  - Spacy Neural Network model to train a new statistical model.
-  - We will save the model.
-  - We will create a Spacy NLP pipeline and use the new model to detect manufacturing entities.
+We will perform the following: (how is this process with the application?)
 
+- Create a train dataset from OSH project websites. (Giving example?)
+- Label the dataset with the selected entities using Doccano labeling tool manually.
+- Save the labels in a text file as JSONL.
+- Spacy Neural Network model to train a new statistical model.
+- We will save the model.
+- We will create a Spacy NLP pipeline and use the new model to detect manufacturing entities.
 
 ## PROGRAMMING
 
-- Needed softwares are
+- Needed software:
   - Python Compiler (Python 3.7 or more)
   - Doccano (1.3.0)
-- Needed libraries are
+- Needed libraries:
   - SpaCy (3.0.5)
   - json 
   - Tkinter
@@ -60,8 +60,8 @@
   - Pickle
 - Need to download an IDE environmennt on you computer, clone the repository on you IDE, then to run the application, run either runModel_support file one or two 
 
+## INSTRUCTIONS TO RUN THE APPLICATION
 
-## **INSTRUCTIONS TO RUN THE APPLICATION**
 - Copy the URL of the repository
 - Open the python IDE which allows to clone github repository, in our case we used PyCharm Community Edition 2020.3.2
 -	create a new project and save it
@@ -71,13 +71,15 @@
 -	After cloning the repository, it will open in your ide, you need to create the python environment if it has not happened automaticalyy, and the python compiler for opening application 1 or 2, go from directory to selected app, run the runModel_support 
 - The application will start in a new window, you can give your input and see the results
 
-## **INSTRUCTIONS TO MODIFY**
+## INSTRUCTIONS FOR MODIFICATION
 
 ### CREATING A DATASET
+
 - To create a dataset, our team used basic definitions and some open source hardware plattforms. The train dataset is saved as txt to import in doccano later on.
 
 ### LABELING THE DATA
--This step is for labeling the entities using Doccano, but if you already have labeled data, you can skip this step and directly go to training the model.
+
+- This step is for labeling the entities using Doccano, but if you already have labeled data, you can skip this step and directly go to training the model.
 - First step is to install doccano, please follow the [doccano](https://doccano.github.io/doccano/getting-started/) instructions and open the program
 - For WIndows installation,
   - `pip install doccano`
@@ -94,8 +96,10 @@
 - After finishing the labeling process, click "Export Dataset" as JSONL file format under Actions and save the file
 
 ### TRAINING THE MODEL
+
 - First step is to install spacy
 - Firstly we read the JSONL file:
+
 ```
   import json
   labeled_data = []
@@ -107,7 +111,8 @@
 ```
 
 - After reading our data, we need to convert the format
- ```
+
+```
  TRAINING_DATA = []
   for entry in labeled_data:
       entities = []
@@ -117,7 +122,9 @@
       TRAINING_DATA.append(spacy_entry)
  print(TRAINING_DATA)
 ```
+
 - Next step is to train the model- We use Deep Learning (NN) and set a dropout rate of 0.3 to prevent overfitting.
+
 ```
 import spacy
 import random
@@ -156,6 +163,7 @@ for itn in range(40):
 ```
  nlp.to_disk("./my.model")
 ```
+
 - Testing the model
 
 ```
@@ -165,9 +173,12 @@ doc = nlp(example)
 displacy.render(doc, style='ent')
 ```
 
-## **POTENTIAL IMPROVEMENTS**
+## POTENTIAL IMPROVEMENTS
+
 - The algorithm can be used in different use cases with corresponding train data
 
+---
 
 References used:
-1. [Reference 1](https://itnext.io/nlp-named-entity-recognition-ner-with-spacy-and-python-dabaf843cab2?gi=493e297bfed)
+
+- [NLP: Named Entity Recognition (NER) with Spacy and Python](https://itnext.io/nlp-named-entity-recognition-ner-with-spacy-and-python-dabaf843cab2?gi=493e297bfed)
