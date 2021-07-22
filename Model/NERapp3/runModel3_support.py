@@ -5,6 +5,9 @@
 #  in conjunction with Tcl version 8.6
 #    Apr 28, 2021 02:08:10 PM CEST  platform: Windows NT
 
+
+#This file can be considered as the back end of the tkinter window
+
 import sys
 from spacy import displacy
 import spacy
@@ -26,6 +29,8 @@ except ImportError:
     import tkinter.ttk as ttk
     py3 = True
 
+#The input is the url of a website, it return the text of the html tag class_="mw-content-ltr". This tag exists for appropedia pages but
+#might not exists for other url
 def url_to_transcript(url):
     '''Returns transcript data specifically from scrapsfromtheloft.com.'''
     page = requests.get(url).text
@@ -38,118 +43,127 @@ def set_Tk_var():
     global urlLabel
     urlLabel = tk.StringVar()
 
-def set_Tk_var2():
-    global corpusLabel
-    corpusLabel = tk.StringVar()
-
 def init(top, gui, *args, **kwargs):
     global w, top_level, root
     w = gui
     top_level = top
     root = top
 
-def corpusButton():
-    example = corpusLabel.get()
-    print("I got the corpus")
-    nlp = spacy.load("./best_model")
-    print("NER loaded")
-    doc = nlp(example)
-
-    html = displacy.render(doc, style='ent')
-    with open("data_visualisation3.html", "w") as file:
-        file.write(html)
-    print("html page created")
-    file.close()
-
-    import webbrowser
-    new = 2
-    url = os.getcwd() + '/data_visualisation3.html'
-    print(url)
-    webbrowser.open(url, new=new)
-    print("html page opened")
-    sys.stdout.flush()
-
+#This function starts when you click on the run model button
 def urlButton():
-    url = urlLabel.get()
-    urls = []
-    urls.append(url)
-    transcripts = [url_to_transcript(u) for u in urls]
-    hardwares = ["hardware"]
+    url = urlLabel.get()                        #get the text you enter in the entry
+    split_txt = url.split(":")
+    # need to fnd out if it's a corpus txt on a website
+    #if it's a web site
+    if split_txt[0] == "https":
 
-    for i, c in enumerate(hardwares):  # creating the txt file to load the data
-        with open(c + ".txt", "wb") as file:
-            pickle.dump(transcripts[i], file)
+        urls = []
+        urls.append(url)
+        transcripts = [url_to_transcript(u) for u in urls]          #apply the url_to_transcript function to the url entered in the entry
+        hardwares = ["hardware"]
 
-    data = {}
-    for i, c in enumerate(hardwares):
-        with open(c + ".txt", "rb") as file:
-            data[c] = pickle.load(file)
+        for i, c in enumerate(hardwares):                          # creating the txt file to load the data
+            with open(c + ".txt", "wb") as file:
+                pickle.dump(transcripts[i], file)
 
-    def combine_text(list_of_text):
-        '''Takes a list of text and combines them into one large chunk of text.'''
-        combined_text = ' '.join(list_of_text)
-        return combined_text
+        data = {}                                                   #load the data into a dictionnary this time
+        for i, c in enumerate(hardwares):
+            with open(c + ".txt", "rb") as file:
+                data[c] = pickle.load(file)
 
-    data_combined = {key: [combine_text(value)] for (key, value) in data.items()}
+        def combine_text(list_of_text):
+            '''Takes a list of text and combines them into one large chunk of text.'''
+            combined_text = ' '.join(list_of_text)
+            return combined_text
 
-    pd.set_option('max_colwidth', 150)
-    data_df = pd.DataFrame.from_dict(data_combined).transpose()
-    data_df.columns = ['transcript']
-    data_df = data_df.sort_index()
+        data_combined = {key: [combine_text(value)] for (key, value) in data.items()}
 
-    import re
-    import string
+        pd.set_option('max_colwidth', 150)                                          #create a dataFrame with Pandas library with the texte
+        data_df = pd.DataFrame.from_dict(data_combined).transpose()
+        data_df.columns = ['transcript']
+        data_df = data_df.sort_index()
 
-    def clean_text_round1(text):
-        '''Make text lowercase, remove text in square brackets, remove punctuation and remove words containing numbers.'''
-        text = text.lower()
-        text = re.sub('\[.*?\]', '', text)
-        text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
-        return text
+        import re
+        import string
 
-    round1 = lambda x: clean_text_round1(x)
+#applying cleaning text technics
 
-    data_clean = pd.DataFrame(data_df.transcript.apply(round1))
+        def clean_text_round1(text):
+            text = text.lower()                                                         #make the text lower case
+            text = re.sub('\[.*?\]', '', text)                                          #remove question marks
+            text = re.sub('[%s]' % re.escape(string.punctuation), '', text)             #remove poncutation
+            return text
 
-    def clean_text_round2(text):
-        '''Get rid of some additional punctuation and non-sensical text that was missed the first time around.'''
-        text = re.sub('[‘’“”…]', '', text)
-        text = re.sub('\n', ' ', text)
-        # text = re.sub('\w*\d\w*', '', text)
-        return text
+        round1 = lambda x: clean_text_round1(x)
 
-    round2 = lambda x: clean_text_round2(x)
+        data_clean = pd.DataFrame(data_df.transcript.apply(round1))
 
-    data_clean = pd.DataFrame(data_clean.transcript.apply(round2))
-    # print(data_clean)
+        def clean_text_round2(text):
+            text = re.sub('[‘’“”…]', '', text)                      #remove some other ponctuation
+            text = re.sub('\n', ' ', text)                          #remove the \n
+            # text = re.sub('\w*\d\w*', '', text)                   #remove the digits
+            return text
 
-    cleaned_transcripts = [data_clean.transcript.loc[i] for i in hardwares]
+        round2 = lambda x: clean_text_round2(x)
 
-    for i, c in enumerate(hardwares):
-        with open(c + ".txt", "w") as file:
-            file.write(cleaned_transcripts[i])
+        data_clean = pd.DataFrame(data_clean.transcript.apply(round2))
+        # print(data_clean)
 
-    for i, c in enumerate(hardwares):
-        with open(c + ".txt", "r") as file:
-            example = file.read()
+        cleaned_transcripts = [data_clean.transcript.loc[i] for i in hardwares]
 
-    print("I got the corpus")
-    nlp = spacy.load("./best_model")
-    print("NER loaded")
-    doc = nlp(example)
+        for i, c in enumerate(hardwares):                               #save the the cleaned txt into a txt file
+            with open(c + ".txt", "w", encoding='utf-8') as file:
+                file.write(cleaned_transcripts[i])
 
-    html = displacy.render(doc, style='ent')
-    with open("data_visualisation3.html", "w") as file:
-        file.write(html)
-    print("html page created")
-    file.close()
+        for i, c in enumerate(hardwares):
+            with open(c + ".txt", "r", encoding='utf-8') as file:
+                example = file.read()
 
-    import webbrowser
-    new = 2
-    url = os.getcwd() + '/data_visualisation3.html'
-    webbrowser.open(url, new=new)
-    print("html page opened")
-    sys.stdout.flush()
+        print("I got the corpus")
+        nlp = spacy.load("./best_model")                                #use the NER model that we trainned in another programe
+        print("NER loaded")
+        doc = nlp(example)                                              #load the clean txt file and transforme it as an spacy doc and apply the model to this doc
+
+
+#display the result on a webbrowser as an html page
+
+        html = displacy.render(doc, style='ent')
+        with open("data_visualisation3.html", "w", encoding='utf-8') as file:
+            file.write(html)
+        print("html page created")
+        file.close()
+
+        import webbrowser
+        new = 2
+        url = os.getcwd() + '/data_visualisation3.html'
+        webbrowser.open(url, new=new)
+        print("html page opened")
+        sys.stdout.flush()
+
+    #if it is a simple txt corpus
+    else:
+
+        example = url                                       #then the corpus txt become directly the spacy doc
+        print("I got the corpus")
+        nlp = spacy.load("./best_model")
+        print("NER loaded")
+        doc = nlp(example)                                      #you can directly apply the NER model to the Doc
+
+#same technics to display the result
+
+        html = displacy.render(doc, style='ent')
+        with open("data_visualisation3.html", "w") as file:
+            file.write(html)
+        print("html page created")
+        file.close()
+
+        import webbrowser
+        new = 2
+        url = os.getcwd() + '/data_visualisation3.html'
+        print(url)
+        webbrowser.open(url, new=new)
+        print("html page opened")
+        sys.stdout.flush()
 
 def destroy_window():
     # Function which closes the window.

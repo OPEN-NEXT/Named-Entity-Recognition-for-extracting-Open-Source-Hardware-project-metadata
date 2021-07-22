@@ -5,6 +5,8 @@
 #  in conjunction with Tcl version 8.6
 #    Apr 28, 2021 02:08:02 PM CEST  platform: Windows NT
 
+#This file can be considered as the front end of the tkinter window
+
 import sys
 from PIL import Image, ImageTk
 
@@ -23,12 +25,12 @@ except ImportError:
 import runModel3_support
 
 def vp_start_gui():
-    '''Starting point when module is the main routine.'''
+    #Starting point when module is the main routine
     global val, w, root
-    root = tk.Tk()
+    root = tk.Tk()                                  #create the basic root for the Tkinter window
     runModel3_support.set_Tk_var()
-    runModel3_support.set_Tk_var2()
 
+    #integrate the IPK logo on the window
     image1 = Image.open("IPK.png")
     image1 = image1.resize((201, 100), Image.ANTIALIAS)
     test = ImageTk.PhotoImage(image1)
@@ -37,13 +39,15 @@ def vp_start_gui():
     # Position image
     label1.place(relx=0, rely=0)
 
-    image2 = Image.open("openNext.png")
-    image2 = image2.resize((246, 160), Image.ANTIALIAS)
-    test = ImageTk.PhotoImage(image2)
-    label2 = tk.Label(image=test)
-    label2.image = test
-    # Position image
-    label2.place(relx=0.59, rely=0.64)
+    from tkinter import Canvas, PhotoImage
+
+    #create a canvas on the window with the OpenNext logo on it
+    canvas = Canvas(root, width=150, height=150, highlightthickness=0)
+    canvas.place(relx=0.74, rely=-0.04)
+    img = Image.open("openNext.png")
+    img = img.resize((153, 150), Image.ANTIALIAS)
+    canvas.image = ImageTk.PhotoImage(img)
+    canvas.create_image(75, 75, image=canvas.image)
 
     top = Toplevel1(root)
     runModel3_support.init(root, top)
@@ -69,9 +73,10 @@ def destroy_Toplevel1():
 
 class Toplevel1:
     def __init__(self, top=None):
-        '''This class configures and populates the toplevel window.
-           top is the toplevel containing window.'''
-        _bgcolor = '#d9d9d9'  # X11 color: 'gray85'
+        #This class configures and populates the toplevel window.
+        #top is the toplevel containing window
+
+        _bgcolor = '+'  # X11 color: 'gray85'
         _fgcolor = '#000000'  # X11 color: 'black'
         _compcolor = '#d9d9d9' # X11 color: 'gray85'
         _ana1color = '#d9d9d9' # X11 color: 'gray85'
@@ -91,8 +96,10 @@ class Toplevel1:
         top.title("NER Application")
         top.configure(background="#2ca971")
 
+
+        #Here you configure the parameters of the run Model Button
         self.Button1 = tk.Button(top)
-        self.Button1.place(relx=0.05, rely=0.8, height=53, width=156)
+        self.Button1.place(relx=0.4, rely=0.7, height=53, relwidth=0.2)
         self.Button1.configure(activebackground="#ececec")
         self.Button1.configure(activeforeground="#000000")
         self.Button1.configure(background="#d9d9d9")
@@ -104,21 +111,9 @@ class Toplevel1:
         self.Button1.configure(pady="0")
         self.Button1.configure(text='''Run Model''')
 
-        self.Button3 = tk.Button(top)
-        self.Button3.place(relx=0.45, rely=0.35, height=53, width=136)
-        self.Button3.configure(activebackground="#ececec")
-        self.Button3.configure(activeforeground="#000000")
-        self.Button3.configure(background="#d9d9d9")
-        self.Button3.configure(command=runModel3_support.corpusButton)
-        self.Button3.configure(disabledforeground="#a3a3a3")
-        self.Button3.configure(foreground="#000000")
-        self.Button3.configure(highlightbackground="#d9d9d9")
-        self.Button3.configure(highlightcolor="black")
-        self.Button3.configure(pady="0")
-        self.Button3.configure(text='''Run Model''')
-
+        # Here you configure the parameters of the Entry
         self.Entry3 = tk.Entry(top)
-        self.Entry3.place(relx=0.05, rely=0.675, height=54, relwidth=0.5)
+        self.Entry3.place(relx=0.1, rely=0.45, height=108, relwidth=0.8)
         self.Entry3.configure(background="white")
         self.Entry3.configure(disabledforeground="#a3a3a3")
         self.Entry3.configure(font="TkFixedFont")
@@ -126,28 +121,13 @@ class Toplevel1:
         self.Entry3.configure(insertbackground="black")
         self.Entry3.configure(textvariable=runModel3_support.urlLabel)
 
-        self.Entry4 = tk.Entry(top)
-        self.Entry4.place(relx=0.45, rely=0.225, height=54, relwidth=0.5)
-        self.Entry4.configure(background="white")
-        self.Entry4.configure(disabledforeground="#a3a3a3")
-        self.Entry4.configure(font="TkFixedFont")
-        self.Entry4.configure(foreground="#000000")
-        self.Entry4.configure(insertbackground="black")
-        self.Entry4.configure(textvariable=runModel3_support.corpusLabel)
-
-        self.Label1 = tk.Label(top)
-        self.Label1.place(relx=0.45, rely=0.15, height=26, width=171)
-        self.Label1.configure(background="#d9d9d9")
-        self.Label1.configure(disabledforeground="#a3a3a3")
-        self.Label1.configure(foreground="#000000")
-        self.Label1.configure(text='''Enter a corpus text below''')
-
+        # Here you configure the parameters of the Label
         self.Label2 = tk.Label(top)
-        self.Label2.place(relx=0.05, rely=0.6, height=26, width=171)
+        self.Label2.place(relx=0.275, rely=0.37, height=26, relwidth=0.45)
         self.Label2.configure(background="#d9d9d9")
         self.Label2.configure(disabledforeground="#a3a3a3")
         self.Label2.configure(foreground="#000000")
-        self.Label2.configure(text='''Enter an appropedia url below''')
+        self.Label2.configure(text='''Enter an appropedia url or a corpus text below''')
 
 if __name__ == '__main__':
     vp_start_gui()
