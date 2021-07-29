@@ -127,7 +127,7 @@ def urlButton():
 
 #display the result on a webbrowser as an html page
 
-        html = displacy.render(doc, style='ent')
+        html = displacy.render(doc, style='ent', page=True)
         with open("data_visualisation3.html", "w", encoding='utf-8') as file:
             file.write(html)
         print("html page created")
@@ -151,8 +151,8 @@ def urlButton():
 
 #same technics to display the result
 
-        html = displacy.render(doc, style='ent')
-        with open("data_visualisation3.html", "w") as file:
+        html = displacy.render(doc, style='ent', page=True)
+        with open("data_visualisation3.html", "w", encoding='utf-8') as file:
             file.write(html)
         print("html page created")
         file.close()
