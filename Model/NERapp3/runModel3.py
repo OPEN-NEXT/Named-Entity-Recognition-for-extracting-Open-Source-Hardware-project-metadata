@@ -127,7 +127,7 @@ class Toplevel1:
         self.Label2.configure(background="#d9d9d9")
         self.Label2.configure(disabledforeground="#a3a3a3")
         self.Label2.configure(foreground="#000000")
-        self.Label2.configure(text='''Enter an appropedia url or a corpus text below''')
+        self.Label2.configure(text='''Enter a Mediawiki-based website or a corpus text below''')
 
 if __name__ == '__main__':
     vp_start_gui()
