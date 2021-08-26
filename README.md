@@ -1,4 +1,7 @@
-### Named Entity Recognition for extracting Open Source Hardware project metadata
+[![DOI](https://zenodo.org/badge/25968380.svg)](https://zenodo.org/badge/latestdoi/25968880)
+[![GitHub license](https://img.shields.io/github/license/OPEN-NEXT/Named-Entity-Recognition-for-extracting-Open-Source-Hardware-project-metadata.svg?style=flat)](./LICENSE)
+
+# Named Entity Recognition for extracting Open Source Hardware project metadata
 
 - In this repository you can find an application, which introduces a main focus in Named Entity Recognition (NLP or NER).
 - The aim is to extract common entities within a text (or webpages).
