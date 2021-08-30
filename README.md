@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/25968380.svg)](https://zenodo.org/badge/latestdoi/2596880)
+[![DOI](https://zenodo.org/badge/374925324.svg)](https://zenodo.org/badge/latestdoi/374925324)
 [![GitHub license](https://img.shields.io/github/license/OPEN-NEXT/Named-Entity-Recognition-for-extracting-Open-Source-Hardware-project-metadata.svg?style=flat)](./LICENSE)
 
 # Named Entity Recognition for extracting Open Source Hardware project metadata
