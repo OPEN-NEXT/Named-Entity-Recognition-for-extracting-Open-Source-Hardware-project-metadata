@@ -16,6 +16,9 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import pickle
 import os
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+
 
 try:
     import Tkinter as tk
@@ -107,10 +110,19 @@ def urlButton():
         round2 = lambda x: clean_text_round2(x)
 
         data_clean = pd.DataFrame(data_clean.transcript.apply(round2))
-        # print(data_clean)
-
         cleaned_transcripts = [data_clean.transcript.loc[i] for i in hardwares]
-
+        # Wordcloud
+        str1 = ''.join(cleaned_transcripts)
+        wordcloud = WordCloud(random_state=8,
+                              normalize_plurals=False,
+                              width=600, height=300,
+                              max_words=300,
+                              stopwords=['the', 'of', 'and', 'is', 'to', 'in', 'a', 'from', 'by', 'that', 'with', 'this', 'as', 'an', 'are','its', 'at', 'for', 'on', 'into'])
+        # Apply the wordcloud to the text.
+        wordcloud.generate(str1)
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.show()
+        print("plot erstellt")
         for i, c in enumerate(hardwares):                               #save the the cleaned txt into a txt file
             with open(c + ".txt", "w", encoding='utf-8') as file:
                 file.write(cleaned_transcripts[i])
@@ -123,7 +135,6 @@ def urlButton():
         nlp = spacy.load("./best_model")                                #use the NER model that we trainned in another programe
         print("NER loaded")
         doc = nlp(example)                                              #load the clean txt file and transforme it as an spacy doc and apply the model to this doc
-
 
 #display the result on a webbrowser as an html page
 
@@ -148,7 +159,17 @@ def urlButton():
         nlp = spacy.load("./best_model")
         print("NER loaded")
         doc = nlp(example)                                      #you can directly apply the NER model to the Doc
-
+        # Wordcloud
+        wordcloud = WordCloud(random_state=8,
+                              normalize_plurals=False,
+                              width=600, height=300,
+                              max_words=300,
+                              stopwords=['the', 'of', 'and', 'is', 'to', 'in', 'a', 'from', 'by', 'that', 'with',
+                                         'this', 'as', 'an', 'are', 'its', 'at', 'for', 'on', 'into'])
+        # Apply the wordcloud to the text.
+        wordcloud.generate(example)
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.show()
 #same technics to display the result
 
         html = displacy.render(doc, style='ent', page=True)
@@ -174,7 +195,5 @@ def destroy_window():
 if __name__ == '__main__':
     import runModel3
     runModel3.vp_start_gui()
-
-
 
 
