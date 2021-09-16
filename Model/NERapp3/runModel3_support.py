@@ -117,7 +117,8 @@ def urlButton():
                               normalize_plurals=False,
                               width=600, height=300,
                               max_words=300,
-                              stopwords=['the', 'of', 'and', 'is', 'to', 'in', 'a', 'from', 'by', 'that', 'with', 'this', 'as', 'an', 'are','its', 'at', 'for', 'on', 'into'])
+                              stopwords=['the', 'of', 'and', 'is', 'to', 'in', 'a', 'from', 'by', 'that', 'with',
+                                         'this', 'as', 'an', 'are','its', 'at', 'for', 'on', 'into'])
         # Apply the wordcloud to the text.
         wordcloud.generate(str1)
         plt.imshow(wordcloud, interpolation='bilinear')
