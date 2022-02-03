@@ -19,7 +19,7 @@ import os
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
-
+"""
 try:
     import Tkinter as tk
 except ImportError:
@@ -30,7 +30,9 @@ try:
     py3 = False
 except ImportError:
     import tkinter.ttk as ttk
-    py3 = True
+    py3 = True 
+    
+    """
 
 #The input is the url of a website, it return the text of the html tag class_="mw-content-ltr". This tag exists for appropedia pages but
 #might not exists for other url
@@ -43,18 +45,20 @@ def url_to_transcript(url):
     return text
 
 def set_Tk_var():
-    global urlLabel
-    urlLabel = tk.StringVar()
+    #global urlLabel
+    urlLabel = input("Enter website or text:")
+    urlButton(urlLabel)
 
-def init(top, gui, *args, **kwargs):
+
+""" def init(top, gui, *args, **kwargs):
     global w, top_level, root
     w = gui
     top_level = top
     root = top
-
+"""
 #This function starts when you click on the run model button
-def urlButton():
-    url = urlLabel.get()                        #get the text you enter in the entry
+def urlButton(url):
+    #url = urlLabel                       #get the text you enter in the entry
     split_txt = url.split(":")
     # need to fnd out if it's a corpus txt on a website
     #if it's a web site
@@ -117,7 +121,7 @@ def urlButton():
                               normalize_plurals=False,
                               width=600, height=300,
                               max_words=300,
-                              stopwords=['the', 'of', 'and', 'is', 'to', 'in', 'a', 'from', 'by', 'that', 'with', 'this', 'as', 'an', 'are','its', 'at', 'for', 'on', 'into'])
+                              stopwords=['the', 'of', 'and', 'is', 'to', 'in', 'a', 'from', 'by', 'that', 'with', 'this', 'as', 'an', 'are','its', 'at', 'for', 'on', 'into', 'will', 'be', 'there'])
         # Apply the wordcloud to the text.
         wordcloud.generate(str1)
         plt.imshow(wordcloud, interpolation='bilinear')
@@ -165,7 +169,7 @@ def urlButton():
                               width=600, height=300,
                               max_words=300,
                               stopwords=['the', 'of', 'and', 'is', 'to', 'in', 'a', 'from', 'by', 'that', 'with',
-                                         'this', 'as', 'an', 'are', 'its', 'at', 'for', 'on', 'into'])
+                                         'this', 'as', 'an', 'are', 'its', 'at', 'for', 'on', 'into','will', 'be', 'there'])
         # Apply the wordcloud to the text.
         wordcloud.generate(example)
         plt.imshow(wordcloud, interpolation='bilinear')
@@ -193,7 +197,9 @@ def destroy_window():
     top_level = None
 
 if __name__ == '__main__':
-    import runModel3
-    runModel3.vp_start_gui()
+    #import runModel3
+    #runModel3.vp_start_gui()
+    set_Tk_var()
+
 
 
